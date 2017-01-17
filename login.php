@@ -1,53 +1,35 @@
 <?php
-	mysqli_connect("danu6.it.nuigalway.ie","mydb2858fm","xa4zud","mydb2858");
+	require_once 'include/DBFn.php';
+	$db = new DBFn();
+	$res = array("error"=> FALSE); //array that holds JSON response
 
-	if(isset($_POST["username"])){
-    
-    $username = $_POST["username"];
-	}
-	if(isset($_POST["password"])){
-    
-    $password = $_POST["password"];
-	}
-	
-	if (!empty($_POST)) {
+	if(isset($_POST['email'])&& isset($_POST['password'])){
+		$email = $_POST['email'];
+		$password = $_POST['password'];
 
-		// if (empty($_POST['username'])) {
-		// 	$response["success"] = 0; 
-		// 	$response["message"] = "Username not entered.";
-		// 	die(json_encode($response)); 
-		// }
+		$user = $db->getUser($email,$password);
 
-		// if (empty($_POST['password'])) {
-		// 	$response["success"] = 0; 
-		// 	$response["message"] = "Password not entered.";
-		// 	die(json_encode($response)); 
-		// }
+		if($user!=false){
 
+			$res["error"] = FALSE;
+			$res["uid"] = $user["unique_id"];
+            $res["user"]["first_name"] = $user["first_name"];
+            $res["user"]["surname"] = $user["surname"];
+            $res["user"]["phone_no"] = $user["phone_no"];
+            $res["user"]["email"] = $user["email"];
+            $res["user"]["created_at"] = $user["created_at"];
+            $res["user"]["updated_at"] = $user["updated_at"];
+            echo json_encode($res);
+		}else{
 
-		$loginQuery = " SELECT * FROM login WHERE username = '$username'and password='$password'";
-
-		$sql = mysqli_query($loginQuery);
-
-		$array = mysqli_fetch_array($sql);
-
-		// if(!empty($array)){
-
-		// 	$response["success"] = 1;
-		// 	$response["message"] = "Login Successful";
-		// 	die(json_encode($response));
-
-		// }else{
-		// 	$response["success"] = 0;
-		// 	$response["message"] = "Invalid Login Details";
-		// 	die(json_encode($response));
-		// }
+			$res["error"] = TRUE;
+			$res["error_msg"] = "Invalid Login Credentials";
+			echo json_encode($res);
+		}
 
 	}else{
-		 $response["success"] = 0;
-		 $response["message"] = "Both username & password fields are empty!";
-		 die(json_encode($response));
+		$res["error"] = TRUE;
+		$res["error_msg"] = "Missing Information";
+		echo json_encode($res);
 	}
-
-	mysqli_close();
 ?>

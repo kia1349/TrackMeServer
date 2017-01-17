@@ -11,8 +11,6 @@
 			$db = new Db_Connect();
         	$this->conn = $db->connect();
 		}
-
-
 		/**/
 		function _destruct(){
 
@@ -21,7 +19,7 @@
 
 		public function saveUser($fname, $surname, $email, $phno, $pw){
 			$uuid = uniqid('', true);
-			$hash = $this->hashSSHA($pw);
+			$hash = $this->hash($pw);
         	$encrypted_pw = $hash["encrypted"];
         	$salt = $hash["salt"];
 
@@ -73,7 +71,36 @@
 
 		public function doesUserExist($em){
 
-			
+			$stmt = $this->conn->prepare("SELECT email from userDetails WHERE email = ?");
+			$stmt->bind_param("s",$em);
+			$stmt->execute();
+			$stmt->store_result();
+
+
+			if($stmt -> num_rows>0){
+
+				$stmt ->close();
+				return true;
+			}
+			else{
+
+				$stmt->close();
+				return false;
+			}
+		}
+
+		public function hash($pw){
+
+			$salt = sha1(rand());
+			$salt = substr($salt ,0,10);
+			$encrypted = base64_encode(sha1($password . $salt, true));// COULD BE TYPO
+			$hash = array("salt"=>$salt, "encrypted"=>$encrypted);
+			return $hash;
+		}
+
+		public function checkHash($salt, $pass){
+			$hash = base64_encode(sha1($pass . $salt,true). $salt);
+			return $hash;
 		}
 
 	}
