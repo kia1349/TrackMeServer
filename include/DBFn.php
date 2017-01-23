@@ -8,7 +8,7 @@
 		 */
 		function _construct(){
 			require_once 'DBConnect.php';
-			$db = new Db_Connect();
+			$db = new DBConnect();
         	$this->conn = $db->connect();
 		}
 		/**/
