@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 require_once 'include/DBFn.php';
 $db = new DBFn();
@@ -15,7 +13,6 @@ if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['emai
 
 		$phno = null;
 	}
-
 
 	$first_name = $_POST['first_name'];
 	$surname = $_POST['surname'];
@@ -46,7 +43,6 @@ if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['emai
 			echo json_encode($res);
 
 		}
-
     }
   
 }else{
