@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 		function _construct(){
 			require_once 'DBConnect.php';
 			$db = new DBConnect();
-        	$this->conn = $db->connect();
+        	$conn = $db->connect();
 		}
 		/**/
 		function _destruct(){
