@@ -1,18 +1,19 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 	class DBFn{
+		
 		private $conn;
 		/*
 		 *	Constructor for database functions class that connects to database
 		 */
-		function _construct(){
+		function __construct(){
+
 			require_once 'DBConnect.php';
 			$db = new DBConnect();
-        	$conn = $db->connect();
+        	$this->conn = $db->connect();
 		}
 		/**/
-		function _destruct(){
+		function __destruct(){
 		}
 		public function saveUser($fname, $surname, $email, $phno, $pw){
 			$uuid = uniqid('', true);
