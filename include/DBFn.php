@@ -71,7 +71,7 @@
 		public function hash($pw){
 			$salt = sha1(rand());
 			$salt = substr($salt ,0,10);
-			$encrypted = base64_encode(sha1($password . $salt, true));// COULD BE TYPO
+			$encrypted = base64_encode(sha1($pw . $salt, true));// COULD BE TYPO
 			$hash = array("salt"=>$salt, "encrypted"=>$encrypted);
 			return $hash;
 		}
