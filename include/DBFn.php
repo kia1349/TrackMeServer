@@ -26,6 +26,7 @@
         	$result = $stmt->execute();
         	$stmt->close();
         	if($result){
+        		
 	        	$stmt = $this-> conn -> prepare("SELECT * FROM userDetails WHERE email =?"); //SQL Statment object
 	        	$stmt -> bind_param("s", $email);
 	        	$stmt->execute();
