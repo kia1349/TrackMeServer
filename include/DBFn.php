@@ -16,19 +16,18 @@
 		function __destruct(){
 		}
 		public function saveUser($fname, $surname, $email, $phno, $pw){
-			$uuid = uniqid('', true);
+			$uuid = uniqid('', true); //Prefix + 'More Entropy = true' to increse likelyhood of uuid being unique
 			$hash = $this->hash($pw);
         	$encrypted_pw = $hash["encrypted"];
         	$salt = $hash["salt"];
-        	$stmt = $this-> conn -> prepare("INSERT INTO userDetails(unique_id, first_name, surname, email, phone_no, encrypted_password, salt, created_at) VALUES(?,?,?,?,?,?,?,?,NOW())");
-        	$stmt-> bind_param("ssss", $uuid,
+        	$stmt = $this->conn->prepare("INSERT INTO userDetails(unique_id, first_name, surname, email, phone_no, encrypted_password, salt, created_at) VALUES(?,?,?,?,?,?,?,?,NOW())");
+        	$stmt->bind_param("sssssss", $uuid,
         		$fname, $surname, $email, $phno, $encrypted_pw, $salt);
         	$result = $stmt->execute();
         	$stmt->close();
         	if($result){
-        		
 	        	$stmt = $this-> conn -> prepare("SELECT * FROM userDetails WHERE email =?"); //SQL Statment object
-	        	$stmt -> bind_param("s", $email);
+	        	$stmt->bind_param("s", $email);
 	        	$stmt->execute();
 	        	$user = $stmt->get_result()->fetch_assoc();
 	        	return $user;
@@ -55,9 +54,9 @@
 				return null;
 			}
 		}
-		public function doesUserExist($em){
+		public function doesUserExist($email){
 			$stmt = $this->conn->prepare("SELECT email from userDetails WHERE email = ?");
-			$stmt->bind_param("s",$em);
+			$stmt->bind_param("s", $email);
 			$stmt->execute();
 			$stmt->store_result();
 			if($stmt -> num_rows>0){
