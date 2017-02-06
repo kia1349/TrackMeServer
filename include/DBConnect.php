@@ -9,7 +9,6 @@
 
       	    if ($conn->connect_error) {
  
- 
        	    	echo '<script>console.log("Unable to connect to database")</script>';
      		 	
  		}

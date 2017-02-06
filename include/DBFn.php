@@ -20,7 +20,10 @@
 			$hash = $this->hash($pw);
         	$encrypted_pw = $hash["encrypted"];
         	$salt = $hash["salt"];
-        	$stmt = $this->conn->prepare("INSERT INTO userDetails(unique_id, first_name, surname, email, phone_no, encrypted_password, salt, created_at) VALUES(?,?,?,?,?,?,?,?,NOW())");
+        	$stmt = $this->conn->prepare("INSERT INTO userDetails(unique_id, first_name, surname, email, phone_no, encrypted_password, salt, created_at) VALUES(?,?,?,?,?,?,?,NOW())");
+        	if ($stmt === FALSE) {
+    			die ("Mysql Error: " . $this->conn->error);
+			}
         	$stmt->bind_param("sssssss", $uuid,
         		$fname, $surname, $email, $phno, $encrypted_pw, $salt);
         	$result = $stmt->execute();
@@ -56,6 +59,9 @@
 		}
 		public function doesUserExist($email){
 			$stmt = $this->conn->prepare("SELECT email from userDetails WHERE email = ?");
+			if ($stmt === FALSE) {
+    			die ("Mysql Error: " . $this->conn->error);
+			}
 			$stmt->bind_param("s", $email);
 			$stmt->execute();
 			$stmt->store_result();
