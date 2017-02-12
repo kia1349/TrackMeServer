@@ -49,7 +49,7 @@
 				*/
 				$salt = $user['salt'];
 				$encrypted_pw = $user['encrypted_password'];
-				$hash = $this->chechHash($salt, $pw);
+				$hash = $this->checkHash($salt, $pw);
 				if($encrypted_pw == $hash){
 					return $user;
 				}
