@@ -39,7 +39,9 @@
 	        }
 		}
 		public function getUser($em, $pw){
+
 			$stmt = $this->conn->prepare("SELECT * FROM userDetails WHERE email = ?");
+			
 			$stmt->bind_param("s",$em);
 			if($stmt->execute()){
 				$user = $stmt->get_result()->fetch_assoc();
