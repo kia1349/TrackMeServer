@@ -23,6 +23,7 @@ if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['emai
 
     	$res["error"] = TRUE;
     	$res["error_msg"] = "Account already exists for email" . $email;
+    	
     }else{
     	
 		$user = $db->saveUser($first_name, $surname, $email, $phno, $password);
