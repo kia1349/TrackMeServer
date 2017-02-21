@@ -41,24 +41,30 @@
 		public function getUser($em, $pw){
 
 			$stmt = $this->conn->prepare("SELECT * FROM userDetails WHERE email = ?");
-			
-			$stmt->bind_param("s",$em);
-			if($stmt->execute()){
-				$user = $stmt->get_result()->fetch_assoc();
-				$stmt ->close();
-				/*
-				 * Running verification on user password
-				*/
+			if ($stmt === FALSE) {
+     			die ("Mysql Error: " . $this->conn->error);
+			}
+			$stmt->bind_param("s", $em);
+			$stmt->execute();
+			$user = $stmt->get_result()->fetch_assoc();
+			$stmt->close();
+
+			if($user){
+
 				$salt = $user['salt'];
 				$encrypted_pw = $user['encrypted_password'];
-				$hash = $this->checkHash($salt, $pw);
-				if($encrypted_pw == $hash){
-					return $user;
-				}
+			 	$hash = $this->checkHash($salt, $pw);
+			//	if($encrypted_pw == $hash){
+				return $user;
+			//}
+
 			}else{
+
 				return null;
 			}
+			
 		}
+
 		public function doesUserExist($email){
 			$stmt = $this->conn->prepare("SELECT email from userDetails WHERE email = ?");
 			if ($stmt === FALSE) {
@@ -79,7 +85,7 @@
 		public function hash($pw){
 			$salt = sha1(rand());
 			$salt = substr($salt ,0,10);
-			$encrypted = base64_encode(sha1($pw . $salt, true));// COULD BE TYPO
+			$encrypted = base64_encode(sha1($pw . $salt, true) . $salt);// COULD BE TYPO
 			$hash = array("salt"=>$salt, "encrypted"=>$encrypted);
 			return $hash;
 		}
