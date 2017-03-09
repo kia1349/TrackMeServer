@@ -38,6 +38,68 @@
 	        	return false;
 	        }
 		}
+
+		public function saveUserLocation($uid, $email, $lat, $long, $ts){
+
+			$stmt = $this->conn->prepare("INSERT INTO userLocations(unique_id, email, latitude, longitude, 
+				timestamp) VALUES(?,?,?,?,?))");
+
+			if($stmt === false){
+				die ("Mysql Error: " . $this->conn->error);
+			}
+			$stmt->bind_param("sssss", $uid, $email, $lat, $long, $ts);
+			$result = $stmt->execute();
+			$stmt->close();
+
+
+			if(checkUserExists($email)){
+				$stmt2 = $this->conn->prepare("INSERT INTO latestUserLocation(unique_id, email, latitude, longitude, 
+				timestamp) VALUES(?,?,?,?,?))")
+
+				if($stmt2 === false){
+					die ("Mysql Error: " . $this->conn->error);
+				}
+
+				$stmt2->bind_param("sssss", $uid, $email, $lat, $long, $ts);
+				$result = $stmt2->execute();
+				$stmt2->close();
+
+			}
+			else{
+				$stmt2 = $this->conn->prepare("UPDATE latestUserLocation SET latitude = lat, longitude = lon, timestamp = ts WHERE email = em")
+
+				if($stmt2 === false){
+					die ("Mysql Error: " . $this->conn->error);
+				}
+
+				$stmt2->bind_param("ssss", $lat, $long, $ts, $email);
+				$result = $stmt2->execute();
+				$stmt2->close();
+			}
+		}
+
+		public function checkUserExists($em){
+
+			$stmt = $this->conn->prepare("SELECT * FROM latestUserLocation WHERE email = ?");
+			if ($stmt === FALSE) {
+     			die ("Mysql Error: " . $this->conn->error);
+			}
+			$stmt->bind_param("s", $em);
+			$stmt->execute();
+			$user = $stmt->get_result()->fetch_assoc();
+			$stmt->close();
+
+			if($user){
+				
+				return $user;
+			
+			}else{
+
+				return null;
+			}
+
+
+		}
 		public function getUser($em, $pw){
 
 			$stmt = $this->conn->prepare("SELECT * FROM userDetails WHERE email = ?");
@@ -54,7 +116,7 @@
 				$salt = $user['salt'];
 				$encrypted_pw = $user['encrypted_password'];
 			 	$hash = $this->checkHash($salt, $pw);
-			//	if($encrypted_pw == $hash){
+				//if($encrypted_pw == $hash){
 				return $user;
 			//}
 
@@ -92,6 +154,14 @@
 		public function checkHash($salt, $pass){
 			$hash = base64_encode(sha1($pass . $salt,true). $salt);
 			return $hash;
+		}
+
+		public function addLocation(){
+
+		}
+
+		public function getUserLocation(){
+			
 		}
 	}
 ?>
