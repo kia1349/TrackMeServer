@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once 'include/DBFn.php';
 $db = new DBFn();
@@ -11,34 +13,20 @@ if (isset($_POST['uid']) && isset($_POST['email'])&& isset($_POST['latitude'])&&
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
     $timestamp = $_POST['timestamp'];
-
-    if(!$db->doesUserExist($email)){
-
-    	$res["error"] = TRUE;
-    	$res["error_msg"] = "Account already exists for email" . $email;
     	
-    }else{
-    	
-		$updatedLocation = $db->saveUserLocation($first_name, $surname, $email, $phno, $password);
+		$updatedLocation = $db->saveUserLocation($uid, $email, $latitude, $longitude, $timestamp);
 
 		if($updatedLocation){
-
 			$res["error"] = FALSE;
             echo json_encode($res);
-            
 		}else{
 			$res["error"] = TRUE;
 			$res["error_msg"] = "Unknown Error Occurred";
-			echo json_encode($res);
-
+			echo json_encode($updatedLocation);
 		}
-    }
-  
 }else{
 	$res["error"] = TRUE;
 	$res["error_msg"] = "Missing Information";
 	echo json_encode($res);
-
 }
-
 ?>

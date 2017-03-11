@@ -41,8 +41,8 @@
 
 		public function saveUserLocation($uid, $email, $lat, $long, $ts){
 
-			$stmt = $this->conn->prepare("INSERT INTO userLocations(unique_id, email, latitude, longitude, 
-				timestamp) VALUES(?,?,?,?,?))");
+			$stmt = $this->conn->prepare("INSERT INTO usersLocations(unique_id, email, latitude, longitude, 
+				timestamp) VALUES(?,?,?,?,?)");
 
 			if($stmt === false){
 				die ("Mysql Error: " . $this->conn->error);
@@ -52,9 +52,8 @@
 			$stmt->close();
 
 
-			if(checkUserExists($email)){
-				$stmt2 = $this->conn->prepare("INSERT INTO latestUserLocation(unique_id, email, latitude, longitude, 
-				timestamp) VALUES(?,?,?,?,?))")
+			if(!$this->checkUserExists($email)){
+				$stmt2 = $this->conn->prepare("INSERT INTO latestUserLocation(unique_id, email, latitude, longitude,timestamp) VALUES(?,?,?,?,?)");
 
 				if($stmt2 === false){
 					die ("Mysql Error: " . $this->conn->error);
@@ -66,7 +65,7 @@
 
 			}
 			else{
-				$stmt2 = $this->conn->prepare("UPDATE latestUserLocation SET latitude = lat, longitude = lon, timestamp = ts WHERE email = em")
+				$stmt2 = $this->conn->prepare("UPDATE latestUserLocation SET latitude = ?, longitude = ?, timestamp = ? WHERE email = ?");
 
 				if($stmt2 === false){
 					die ("Mysql Error: " . $this->conn->error);
@@ -76,6 +75,8 @@
 				$result = $stmt2->execute();
 				$stmt2->close();
 			}
+
+			return $result;
 		}
 
 		public function checkUserExists($em){
