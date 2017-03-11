@@ -98,7 +98,26 @@
 
 				return null;
 			}
+		}
 
+		public function getUserLocation($em){
+
+			$stmt = $this->conn->prepare("SELECT * FROM latestUserLocation WHERE email = ?");
+			if ($stmt === FALSE) {
+     			die ("Mysql Error: " . $this->conn->error);
+			}
+			$stmt->bind_param("s", $em);
+			$stmt->execute();
+			$userLocation = $stmt->get_result()->fetch_assoc();
+			$stmt->close();
+
+			if($userLocation){
+
+				return $userLocation;
+			}else{
+
+				return null;
+			}
 
 		}
 		public function getUser($em, $pw){
@@ -117,9 +136,9 @@
 				$salt = $user['salt'];
 				$encrypted_pw = $user['encrypted_password'];
 			 	$hash = $this->checkHash($salt, $pw);
-				//if($encrypted_pw == $hash){
-				return $user;
-			//}
+				if($encrypted_pw == $hash){
+					return $user;
+				}
 
 			}else{
 
@@ -157,12 +176,6 @@
 			return $hash;
 		}
 
-		public function addLocation(){
-
-		}
-
-		public function getUserLocation(){
-			
-		}
+		
 	}
 ?>
