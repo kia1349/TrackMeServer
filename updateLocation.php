@@ -6,15 +6,15 @@ require_once 'include/DBFn.php';
 $db = new DBFn();
 $res = array("error"=> FALSE); //array that holds JSON response
 
-if (isset($_POST['uid']) && isset($_POST['email'])&& isset($_POST['latitude'])&& isset($_POST['longitude'])&& isset($_POST['timestamp'])){
+if (isset($_POST['uid']) && isset($_POST['username'])&& isset($_POST['latitude'])&& isset($_POST['longitude'])&& isset($_POST['timestamp'])){
 
 	$uid = $_POST['uid'];
-	$email = $_POST['email'];
+	$username = $_POST['username'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
     $timestamp = $_POST['timestamp'];
     	
-		$updatedLocation = $db->saveUserLocation($uid, $email, $latitude, $longitude, $timestamp);
+		$updatedLocation = $db->saveUserLocation($uid, $username, $latitude, $longitude, $timestamp);
 
 		if($updatedLocation){
 			$res["error"] = FALSE;

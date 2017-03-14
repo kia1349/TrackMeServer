@@ -6,8 +6,8 @@ ini_set('display_errors', 1);
 	$db = new DBFn();
 	$res = array("error"=> FALSE); //array that holds JSON response
 
-	if(isset($_POST['email'])){
-		$email = $_POST['email'];
+	if(isset($_POST['username'])){
+		$email = $_POST['username'];
 
 		$userLocation = $db->getUserLocation($email);
 
@@ -15,7 +15,7 @@ ini_set('display_errors', 1);
 
 			$res["error"] = FALSE;
 			$res["uid"] = $userLocation["unique_id"];
-            $res["userLocation"]["email"] = $userLocation["email"];
+            $res["userLocation"]["username"] = $userLocation["username"];
             $res["userLocation"]["latitude"] = $userLocation["latitude"];
             $res["userLocation"]["longitude"] = $userLocation["longitude"];
             $res["userLocation"]["timestamp"] = $userLocation["timestamp"];
@@ -23,13 +23,13 @@ ini_set('display_errors', 1);
 		}else{
 
 			$res["error"] = TRUE;
-			$res["error_msg"] = "No Tracking Details Available For User With Email ".$email;
+			$res["error_msg"] = "No Tracking Details Available For User With Username ".$username;
 			echo json_encode($res);
 		}
 
 	}else{
 		$res["error"] = TRUE;
-		$res["error_msg"] = "No Email Address Entered";
+		$res["error_msg"] = "No Username Entered";
 		echo json_encode($res);
 	}
 ?>
