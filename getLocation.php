@@ -7,9 +7,9 @@ ini_set('display_errors', 1);
 	$res = array("error"=> FALSE); //array that holds JSON response
 
 	if(isset($_POST['username'])){
-		$email = $_POST['username'];
+		$username = $_POST['username'];
 
-		$userLocation = $db->getUserLocation($email);
+		$userLocation = $db->getUserLocation($username);
 
 		if($userLocation!=false){
 
