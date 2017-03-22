@@ -25,7 +25,7 @@
     			die ("Mysql Error: " . $this->conn->error);
 			}
         	$stmt->bind_param("sssssssss", $uuid,
-        		$fname, $surname, $email, $username, $phno, $type, $encrypted_pw, $salt);
+        		$fname, $surname, $email, $username, $phno, $ty, $encrypted_pw, $salt);
         	$result = $stmt->execute();
         	$stmt->close();
         	if($result){
@@ -98,6 +98,8 @@
 				return null;
 			}
 		}
+
+		
 		public function checkUserExists2($un){
 
 			$stmt = $this->conn->prepare("SELECT * FROM latestUserLocation WHERE username = ?");
@@ -167,11 +169,33 @@
 		}
 
 		public function doesUserExist($email){
+			
 			$stmt = $this->conn->prepare("SELECT email from userDetails WHERE email = ?");
+ 
+       		$stmt->bind_param("s", $email);
+ 
+        	$stmt->execute();
+ 
+        	$stmt->store_result();
+ 
+        	if ($stmt->num_rows > 0) {
+           	 	// user exists
+            	$stmt->close();
+            	return true;
+        	}else {
+            	// user doesn't exist
+            	$stmt->close();
+            	return false;
+        	}
+		}
+
+		public function doesPhoneNumExist($phno){
+
+			$stmt = $this->conn->prepare("SELECT phone_no FROM userDetails WHERE phone_no = ?");
 			if ($stmt === FALSE) {
-    			die ("Mysql Error: " . $this->conn->error);
+     			die ("Mysql Error: " . $this->conn->error);
 			}
-			$stmt->bind_param("s", $email);
+			$stmt->bind_param("s", $phno);
 			$stmt->execute();
 			$stmt->store_result();
 			if($stmt -> num_rows>0){

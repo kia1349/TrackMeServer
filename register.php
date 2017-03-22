@@ -4,11 +4,12 @@ require_once 'include/DBFn.php';
 $db = new DBFn();
 $res = array("error"=> FALSE); //array that holds JSON response
 
-if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['email'])&& isset($_POST['username'])&& isset($_POST['password'])){
+if(isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['email'])&& isset($_POST['username'])&& isset($_POST['password'])){
 
 	if(isset($_POST['phone_no'])){
 
 		$phno = $_POST['phone_no'];
+
 	}else{
 
 		$phno = null;
@@ -17,8 +18,8 @@ if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['emai
 	if(isset($_POST['type'])){
 
 		$type = $_POST['type'];
-	}else{
 
+	}else{
 		$type = null;
 	}
 
@@ -27,18 +28,26 @@ if (isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['emai
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    
+
+  
 
     if($db->doesUserExist($email)){
 
     	$res["error"] = TRUE;
-    	$res["error_msg"] = "Account already exists for email" . $email;
-    	
-    }else if($db->isUsernameUsed($username)){
+    	$res["error_msg"] = "Account already exists for email: " . $email;
+    	echo json_encode($res);
+    }	
+    else if($db->isUsernameUsed($username)){
 
     	$res["error"] = TRUE;
-    	$res["error_msg"] = "Account already exists for username" . $username;
-    	
+    	$res["error_msg"] = "Account already exists for username: " . $username;
+    	echo json_encode($res);
+    }
+    else if($db->doesPhoneNumExist($phno)){
+
+    	$res["error"] = TRUE;
+    	$res["error_msg"] = "Account already exists with phone number: " . $phno;
+    	echo json_encode($res);
     }
     else{
     	
