@@ -54,7 +54,6 @@ if(isset($_POST['first_name']) && isset($_POST['surname'])&& isset($_POST['email
 		$user = $db->saveUser($first_name, $surname, $email, $username, $phno, $password, $type);
 
 		if($user){
-
 			$res["error"] = FALSE;
 			$res["uid"] = $user["unique_id"];
             $res["user"]["first_name"] = $user["first_name"];

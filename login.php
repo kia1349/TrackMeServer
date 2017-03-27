@@ -28,7 +28,7 @@ ini_set('display_errors', 1);
 		}else{
 
 			$res["error"] = TRUE;
-			$res["error_msg"] = "Invalid Login Credentials: ".$user;
+			$res["error_msg"] = "Invalid Login Credentials.";
 			echo json_encode($res);
 		}
 
